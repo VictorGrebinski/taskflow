@@ -18,4 +18,10 @@ export class TasksService {
   findAll() {
     return this.tasksRepository.find();
   }
+  update(id: number, updateTaskDto: any) {
+    return this.tasksRepository.update(id, updateTaskDto);
+  }
+  remove(id: number) {
+    return this.tasksRepository.delete(id);
+  }
 }
