@@ -1,6 +1,6 @@
 import TaskItem from "./TaskItem";
 
-function TaskList({ tasks, onDelete, onToggle }) {
+function TaskList({ tasks, onDelete, onToggle, onEdit }) {
   if (tasks.length === 0) {
     return <p>Nenhuma tarefa cadastrada.</p>;
   }
@@ -13,6 +13,7 @@ function TaskList({ tasks, onDelete, onToggle }) {
           task={task}
           onDelete={onDelete}
           onToggle={onToggle}
+          onEdit={onEdit}
         />
       ))}
     </ul>
