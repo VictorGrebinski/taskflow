@@ -3,6 +3,9 @@ import TaskForm from "./components/TaskForm";
 import TaskList from "./components/TaskList";
 import { getTasks, createTask, deleteTask, updateTask } from "./services/api";
 import "./App.css";
+import LoadingBar from "./components/LoadingBar";
+import LoadingOverlay from "./components/LoadingOverlay";
+
 
 function App() {
   const [tasks, setTasks] = useState([]);
@@ -12,6 +15,7 @@ function App() {
   useEffect(() => {
     const fetchTasks = async () => {
       try {
+        await new Promise(resolve => setTimeout(resolve, 1500)); // ⬅ FORÇA 1.5s
         const data = await getTasks();
         setTasks(data);
       } catch (error) {
@@ -47,7 +51,7 @@ function App() {
       const updatedTask = { ...task, completed: !task.completed };
       await updateTask(task.id, { completed: updatedTask.completed });
       setTasks((prevTasks) =>
-        prevTasks.map((t) => (t.id === task.id ? updatedTask : t))
+        prevTasks.map((t) => (t.id === task.id ? updatedTask : t)),
       );
     } catch (error) {
       console.error(error);
@@ -59,8 +63,8 @@ function App() {
       await updateTask(id, { title: newTitle });
       setTasks((prevTasks) =>
         prevTasks.map((task) =>
-          task.id === id ? { ...task, title: newTitle } : task
-        )
+          task.id === id ? { ...task, title: newTitle } : task,
+        ),
       );
     } catch (error) {
       console.error(error);
@@ -85,6 +89,8 @@ function App() {
 
   return (
     <div className="app">
+      <LoadingOverlay isLoading={isLoading} />
+    <LoadingBar isLoading={isLoading} />
       <header className="app-header">
         <div className="app-header__brand">
           <div className="app-header__logo" aria-hidden="true">
@@ -98,23 +104,36 @@ function App() {
       </header>
 
       {!isLoading && totalCount > 0 && (
-        <div className="stats-bar" role="status" aria-label="Estatisticas das tarefas">
+        <div
+          className="stats-bar"
+          role="status"
+          aria-label="Estatisticas das tarefas"
+        >
           <div className="stats-bar__item">
-            <span className="stats-bar__dot stats-bar__dot--total" aria-hidden="true" />
+            <span
+              className="stats-bar__dot stats-bar__dot--total"
+              aria-hidden="true"
+            />
             <span>
               <span className="stats-bar__number">{totalCount}</span>{" "}
               {totalCount === 1 ? "tarefa" : "tarefas"}
             </span>
           </div>
           <div className="stats-bar__item">
-            <span className="stats-bar__dot stats-bar__dot--pending" aria-hidden="true" />
+            <span
+              className="stats-bar__dot stats-bar__dot--pending"
+              aria-hidden="true"
+            />
             <span>
               <span className="stats-bar__number">{pendingCount}</span>{" "}
               {pendingCount === 1 ? "pendente" : "pendentes"}
             </span>
           </div>
           <div className="stats-bar__item">
-            <span className="stats-bar__dot stats-bar__dot--done" aria-hidden="true" />
+            <span
+              className="stats-bar__dot stats-bar__dot--done"
+              aria-hidden="true"
+            />
             <span>
               <span className="stats-bar__number">{completedCount}</span>{" "}
               {completedCount === 1 ? "concluida" : "concluidas"}
